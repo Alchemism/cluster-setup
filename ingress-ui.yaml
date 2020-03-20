@@ -1,0 +1,14 @@
+apiVersion: networking.k8s.io/v1beta1
+kind: Ingress
+metadata:
+  name: ui-ingress
+  namespace: ui
+spec:
+  rules:
+    - host: dashboard.hejunjie3617.me
+      http:
+        paths:
+        - backend:
+            serviceName: test-load-balancer-ui
+            servicePort: 3000
+          path: /ui

@@ -1,0 +1,38 @@
+apiVersion: networking.k8s.io/v1beta1
+kind: Ingress
+metadata:
+  annotations:
+    nginx.ingress.kubernetes.io/auth-url: "https://$host/oauth2/auth"
+    nginx.ingress.kubernetes.io/auth-signin: "https://$host/oauth2/start?rd=$escaped_request_uri"
+  name: external-auth-oauth2
+  namespace: kubernetes-dashboard
+spec:
+  rules:
+    - host: dashboard.hejunjie3617.me
+      http:
+        paths:
+        - backend:
+            serviceName: kubernetes-dashboard
+            servicePort: 443
+          path: /
+
+---
+
+apiVersion: networking.k8s.io/v1beta1
+kind: Ingress
+metadata:
+  name: oauth2-proxy
+  namespace: kubernetes-dashboard
+spec:
+  rules:
+  - host: dashboard.hejunjie3617.me
+    http:
+      paths:
+      - backend:
+          serviceName: oauth2-proxy
+          servicePort: 4180
+        path: /oauth2
+  tls:
+  - secretName: nginx-ingress-nginx-ingress-default-server-secret.default
+      hosts:
+      - dashboard.hejunjie3617.me
